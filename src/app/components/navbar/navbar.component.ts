@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalLoginComponent } from 'src/app/modals/login/login.component';
+import { ModalService } from 'src/app/modals/modal.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private modalService: ModalService) { }
 
   ngOnInit(): void {
+  }
+
+  logIn(){
+    const modal = this.modalService.openModal({
+      component: ModalLoginComponent,
+      title: "Log In"
+    })
+
+    modal.output.subscribe(console.log)
+  }
+
+  logOut(){
+
   }
 
 }

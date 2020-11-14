@@ -33,9 +33,24 @@ button {
     border-radius: 2px;
     padding: 7px 12px;
     cursor: pointer;
+    text-transform: uppercase;
 
     &:hover {
         filter: brightness(90%);
+    }
+
+    &.btn-primary {
+        background-color: black;
+        color: white;
+        margin-left: 10px;
+    }
+
+    &.btn-secondary {
+        border: 2px solid black;
+    }
+
+    &:disabled {
+        filter: contrast(0.5);
     }
 }
 
@@ -45,7 +60,7 @@ input[type="text"], input[type="password"], input[type="email"] {
     border: 1px solid darkgray;
     border-radius: 5px;
 
-    &.ng-invalid {
+    &.ng-invalid.ng-touched {
         border-color: red;
     }
 }

@@ -1,16 +1,16 @@
-<form>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()"> 
     <label>
         <p>Username</p>
-        <input required type="text">
+        <input required formControlName="username" type="text">
     </label>
 
     <label>
         <p>Password</p>
-        <input required type="password">
+        <input required formControlName="password" type="password">
     </label>
 
     <div class="actions">
-        <button type="button" class="cancel">Cancel</button>
-        <button type="submit" class="submit">Log In</button>
+        <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="!loginForm.valid" >Log In</button>
     </div>
 </form>
