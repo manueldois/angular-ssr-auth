@@ -1,0 +1,21 @@
+form {
+    input {
+        width: 100%;
+    }
+
+    div.actions {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+
+        button.submit {
+            background-color: black;
+            color: white;
+            margin-left: 10px;
+        }
+
+        button.cancel {
+
+        }
+    }
+}

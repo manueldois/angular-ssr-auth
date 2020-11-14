@@ -1,1 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;900&display=swap");
+
+* {
+    font-family: "Roboto", sans-serif;
+    box-sizing: border-box;
+    color: rgb(34, 34, 34);
+}
+
+h2, h3 {
+    font-weight: normal;
+}
+
+p {
+    font-weight: lighter;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.page-title {
+    margin: auto;
+    color:  red;
+}
+
+button {
+    border: none;
+    background: none;
+    font-size: larger;
+    font-weight: normal;
+    border-radius: 2px;
+    padding: 7px 12px;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(90%);
+    }
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+    padding: 10px 20px;
+    border-style: none;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+
+    &.ng-invalid {
+        border-color: red;
+    }
+}
