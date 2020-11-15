@@ -5,12 +5,16 @@ import { MyMoviesComponent } from './pages/my-movies/my-movies.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     component: HomeComponent
   },
   {
     path: 'my-movies',
     component: MyMoviesComponent
+  },
+  {
+    path: '*',
+    redirectTo: 'home'
   }
 ];
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ModalLoginComponent } from 'src/app/modals/login/login.component';
 import { ModalService } from 'src/app/modals/modal.service';
 
@@ -9,19 +10,22 @@ import { ModalService } from 'src/app/modals/modal.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private modalService: ModalService) { }
+  constructor(
+    private modalService: ModalService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
   }
 
-  logIn(){
+  logIn() {
     const modal = this.modalService.openModal({
       component: ModalLoginComponent,
       title: "Log In"
     })
   }
 
-  logOut(){
+  logOut() {
 
   }
 
