@@ -19,8 +19,6 @@ export class NavbarComponent implements OnInit {
       component: ModalLoginComponent,
       title: "Log In"
     })
-
-    modal.output.subscribe(console.log)
   }
 
   logOut(){
