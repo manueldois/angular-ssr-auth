@@ -67,6 +67,7 @@ app.post('/api/login', (req, res) => {
         return
     }
 
+    console.log({ user, password })
     if (user.password !== password) {
         res.status(400).send('Wrong password')
         return
@@ -93,8 +94,9 @@ app.listen(3000, () => {
 
 function hideUserPrivateFields(u: User) {
     if (!u) return
-    delete u.password;
-    return u
+    let u_copy = { ...u }
+    delete u_copy.password;
+    return u_copy
 }
 
 /**

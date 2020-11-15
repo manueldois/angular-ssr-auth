@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
   selector: 'app-modal-login',
@@ -14,21 +15,25 @@ export class ModalLoginComponent implements OnInit {
     password: ['']
   });
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {
   }
 
-  ngOnInit(){
+  ngOnInit() {
 
   }
 
-  onSubmit(){
-    this.out.next(
+  onSubmit() {
+    this.authService.logIn(
       this.loginForm.value
     )
-    this.out.complete()
+      .then(() => this.out.complete())
+      .catch(err => console.log(err))
   }
 
-  onCancel(){
+  onCancel() {
     this.out.complete()
   }
 
