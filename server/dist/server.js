@@ -15,7 +15,7 @@ app.use('/static', express_1.default.static(path_1.default.join(__dirname, '../p
 app.use(body_parser_1.default.json());
 app.use(cors_1.default());
 app.get('/api/users', (req, res) => {
-    res.json(data_1.users.map(hideUserPrivateFields));
+    res.json(data_1.users);
 });
 app.get('/api/users/:username', parseAccessToken, (req, res) => {
     const queryUsername = req.params['username'];
@@ -29,8 +29,8 @@ app.get('/api/users/:username', parseAccessToken, (req, res) => {
         res.json(data_1.users.find(u => u.username === user));
         return;
     }
-    res.json(hideUserPrivateFields(data_1.users
-        .find(u => u.username === queryUsername)));
+    res.json(data_1.users
+        .find(u => u.username === queryUsername));
 });
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
@@ -62,13 +62,6 @@ app.post('/api/login', (req, res) => {
 app.listen(3000, () => {
     console.log("Server started in http://localhost:3000/");
 });
-function hideUserPrivateFields(u) {
-    if (!u)
-        return;
-    let u_copy = { ...u };
-    delete u_copy.password;
-    return u_copy;
-}
 /**
  * Middleware to grab accessToken jwt from request headers, verify it, and put
  * the username in the request

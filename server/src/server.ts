@@ -18,7 +18,7 @@ app.use(cors())
 
 app.get('/api/users', (req, res) => {
     res.json(
-        users.map(hideUserPrivateFields)
+        users
     )
 })
 
@@ -40,10 +40,8 @@ app.get('/api/users/:username', parseAccessToken, (req, res) => {
     }
 
     res.json(
-        hideUserPrivateFields(
-            users
-                .find(u => u.username === queryUsername)
-        )
+        users
+            .find(u => u.username === queryUsername)
     )
 })
 
@@ -83,21 +81,13 @@ app.post('/api/login', (req, res) => {
     )
 
     // Send the token as json
-    res.json({user, accessToken })
+    res.json({ user, accessToken })
 })
 
 app.listen(3000, () => {
     console.log("Server started in http://localhost:3000/")
 })
 
-
-
-function hideUserPrivateFields(u: User) {
-    if (!u) return
-    let u_copy = { ...u }
-    delete u_copy.password;
-    return u_copy
-}
 
 /**
  * Middleware to grab accessToken jwt from request headers, verify it, and put
