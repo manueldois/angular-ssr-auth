@@ -17,25 +17,17 @@ export class NavbarComponent implements OnInit {
   constructor(
     private modalService: ModalService,
     private authService: AuthService,
-    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
-    this.authService.username.subscribe(uname => this.username = uname)
-    this.authService.username.pipe(
-      filter(uname => !!uname),
-      switchMap(username => {
-        return this.http.get('http://localhost:3000/api/users/'+username)
-      }),
-    ).subscribe((user: User) => {
-      if(user.profilePicPath){
-        this.profilePicUrl = new URL(user.profilePicPath, 'http://localhost:3000').href
-      }
+    this.authService.user.subscribe(user => {
+      this.username = user && user.username
+      this.profilePicUrl = user && new URL(user?.profilePicPath, 'http://localhost:3000').href
     })
   }
 
   logIn() {
-    const modal = this.modalService.openModal({
+    this.modalService.openModal({
       component: ModalLoginComponent,
       title: "Log In"
     })

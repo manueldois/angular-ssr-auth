@@ -83,7 +83,7 @@ app.post('/api/login', (req, res) => {
     )
 
     // Send the token as json
-    res.json({ accessToken })
+    res.json({user, accessToken })
 })
 
 app.listen(3000, () => {

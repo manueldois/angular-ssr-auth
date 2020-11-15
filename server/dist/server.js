@@ -57,7 +57,7 @@ app.post('/api/login', (req, res) => {
         username
     }, SERVER_SECRET);
     // Send the token as json
-    res.json({ accessToken });
+    res.json({ user, accessToken });
 });
 app.listen(3000, () => {
     console.log("Server started in http://localhost:3000/");

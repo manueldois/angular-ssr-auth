@@ -1,32 +1,39 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { User } from 'server/src/interfaces/user.interface';
 import { Creds, JWT } from '../interfaces/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  username = new BehaviorSubject(undefined)
+  user = new BehaviorSubject<User>(undefined)
   accessToken = new BehaviorSubject<JWT>(undefined)
 
   constructor(
     private http: HttpClient
   ) {
     if(localStorage){
-      this.readAccessTokenFromLocalStorage()
+      this.readAccessTokenFromLocalStorageAndFetchUser()
     }
 
-    this.logIn({ username: 'Ana', password: 'ana123' })
+    // this.logIn({ username: 'Ana', password: 'ana123' })
   }
 
-  readAccessTokenFromLocalStorage(){
+  readAccessTokenFromLocalStorageAndFetchUser(){
     const accessToken = localStorage.getItem('jwt')
     const username = localStorage.getItem('username')
 
     if(accessToken && username){
-      this.username.next(username)
-      this.accessToken.next(accessToken)
+      this.accessToken.next(accessToken) 
+
+      // Query the API for the full user
+      this.http.get('http://localhost:3000/api/users/'+username)
+        .toPromise()
+        .then(res => {
+          this.user.next(res as User)
+        })
     }
   }
 
@@ -40,10 +47,11 @@ export class AuthService {
       .toPromise()
       .then(res => {
         const accessToken = res['accessToken']
+        const user = res['user'] as User
 
         if (!accessToken) throw 'No Access Token'
 
-        this.username.next(creds.username)
+        this.user.next(user)
         this.accessToken.next(accessToken)
 
         // Save accessToken to localStorage if present
@@ -55,7 +63,7 @@ export class AuthService {
   }
 
   logOut() {
-    this.username.next(undefined)
+    this.user.next(undefined)
     this.accessToken.next(undefined)
 
     this.clearAccessTokenFromLocalStorage()
