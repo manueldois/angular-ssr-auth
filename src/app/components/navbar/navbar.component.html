@@ -4,11 +4,13 @@
         <a routerLink="/my-movies" routerLinkActive="active">My Movies</a>
     </div>
     <div class="right">
-        <button (click)="logIn()">Log in</button>
-        <button (click)="logOut()">Log out</button>
-        <div class="profile">
-            <span>Ana</span>
-            <img src="assets/profile_pics/ana.jpg" alt="">
-        </div>
+        <button *ngIf="!username" (click)="logIn()">Log in</button>
+        <ng-container *ngIf="username">
+            <button (click)="logOut()">Log out</button>
+            <div class="profile" *ngIf="username">
+                <span>{{username}}</span>
+                <img [src]="profilePicUrl" alt="">
+            </div>
+        </ng-container>
     </div>
 </nav>

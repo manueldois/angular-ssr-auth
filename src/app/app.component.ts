@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalService } from './modals/modal.service';
+import { AuthService } from './shared/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,8 @@ import { ModalService } from './modals/modal.service';
 export class AppComponent {
   title = 'Angular SSR Auth';
 
-  constructor(private modalService: ModalService){}
+  constructor(
+    private modalService: ModalService,
+    private authService: AuthService
+  ) { }
 }

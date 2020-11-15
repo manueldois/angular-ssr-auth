@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
 import path from 'path'
+import cors from 'cors'
 import { users } from './data'
 import { User } from './interfaces/user.interface'
 
@@ -12,6 +13,7 @@ const app = express()
 
 app.use('/static', express.static(path.join(__dirname, '../public')))
 app.use(bodyParser.json())
+app.use(cors())
 
 
 app.get('/api/users', (req, res) => {
@@ -70,6 +72,7 @@ app.post('/api/login', (req, res) => {
         return
     }
 
+
     // Make a JWT with username as payload, and sign it with server secret
     const accessToken = jwt.sign(
         {
@@ -89,6 +92,7 @@ app.listen(3000, () => {
 
 
 function hideUserPrivateFields(u: User) {
+    if (!u) return
     delete u.password;
     return u
 }

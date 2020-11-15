@@ -7,11 +7,13 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const path_1 = __importDefault(require("path"));
+const cors_1 = __importDefault(require("cors"));
 const data_1 = require("./data");
 const SERVER_SECRET = '2728iudskjcçapodw72';
 const app = express_1.default();
 app.use('/static', express_1.default.static(path_1.default.join(__dirname, '../public')));
 app.use(body_parser_1.default.json());
+app.use(cors_1.default());
 app.get('/api/users', (req, res) => {
     res.json(data_1.users.map(hideUserPrivateFields));
 });
@@ -60,6 +62,8 @@ app.listen(3000, () => {
     console.log("Server started in http://localhost:3000/");
 });
 function hideUserPrivateFields(u) {
+    if (!u)
+        return;
     delete u.password;
     return u;
 }
