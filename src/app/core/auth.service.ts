@@ -16,26 +16,35 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    if (localStorage) {
+    if(localStorage){
       this.readAccessTokenFromLocalStorageAndFetchUser()
     }
-
-    // this.logIn({ username: 'Ana', password: 'ana123' })
   }
 
   readAccessTokenFromLocalStorageAndFetchUser() {
-    const accessToken = localStorage.getItem('jwt')
-    const username = localStorage.getItem('username')
+    if (localStorage) {
+      const accessToken = localStorage.getItem('jwt')
+      const username = localStorage.getItem('username')
 
-    if (accessToken && username) {
-      this.accessToken.next(accessToken)
-      this.fetchUser(username)
+      if (accessToken && username) {
+        this.accessToken.next(accessToken)
+        this.fetchUser(username)
+      }
     }
   }
 
   clearAccessTokenFromLocalStorage() {
-    localStorage.removeItem('jwt')
-    localStorage.removeItem('username')
+    if(localStorage){
+      localStorage.removeItem('jwt')
+      localStorage.removeItem('username')
+    }
+  }
+
+  putAccessTokenInLocalStorage(username: string, accessToken: JWT){
+    if(localStorage){
+      localStorage.setItem('username', username)
+      localStorage.setItem('jwt', accessToken)
+    }
   }
 
   fetchUser(username: string) {
@@ -60,8 +69,7 @@ export class AuthService {
 
         // Save accessToken to localStorage if present
         if (localStorage) {
-          localStorage.setItem('username', creds.username)
-          localStorage.setItem('jwt', accessToken)
+          this.putAccessTokenInLocalStorage(creds.username, accessToken)
         }
       })
   }

@@ -14,6 +14,9 @@ export function app(): express.Express {
   const distFolder = join(process.cwd(), 'dist/angular-ssr-auth/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
+  // Set localStorage to undefined
+  global['localStorage'] = undefined
+
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   server.engine('html', ngExpressEngine({
     bootstrap: AppServerModule,
