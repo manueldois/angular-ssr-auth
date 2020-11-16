@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { User } from 'server/src/interfaces';
+import { environment } from 'src/environments/environment';
+import { User } from 'src/server/interfaces';
 
 @Component({
   templateUrl: './home.component.html',
@@ -15,10 +16,11 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:3000/api/users')
+    const usersUrl = environment.apiUrl + '/users'
+    this.http.get(usersUrl)
       .toPromise()
       .then(res => this.allUsers = res as User[])
-      .catch(err => this.err = "Couldn't fetch list of users on http://localhost:3000/api/users. Is the server running?")
+      .catch(err => this.err = "Couldn't fetch list of users on " + usersUrl + ". Is the server running?")
   }
 
 }

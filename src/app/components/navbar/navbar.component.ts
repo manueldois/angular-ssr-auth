@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalLoginComponent } from 'src/app/modals/login/login.component';
 import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from 'src/app/core/auth.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -19,7 +20,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.authService.user.subscribe(user => {
       this.username = user && user.username
-      this.profilePicUrl = user && new URL(user?.profilePicPath, 'http://localhost:3000').href
+      this.profilePicUrl = user && new URL(user?.profilePicPath, environment.apiUrl).href
     })
   }
 

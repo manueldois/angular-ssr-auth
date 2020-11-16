@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Movie } from 'server/src/interfaces';
+import { Movie } from 'src/server/interfaces';
 import { AuthService } from 'src/app/core/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   templateUrl: './movies.component.html',
@@ -16,9 +17,9 @@ export class MoviesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const authorizationHeader = {authorization: `Bearer ${this.authService.accessToken.value}`}
+    const authorizationHeader = { authorization: `Bearer ${this.authService.accessToken.value}` }
 
-    this.http.get('http://localhost:3000/api/movies', {headers: authorizationHeader})
+    this.http.get(environment.apiUrl + '/movies', { headers: authorizationHeader })
       .toPromise()
       .then(res => this.movies = res as Movie[])
       .catch(err => alert(err.message))

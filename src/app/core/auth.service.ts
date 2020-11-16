@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { User } from 'server/src/interfaces';
+import { User } from 'src/server/interfaces';
 import { Creds, JWT } from '../interfaces/auth';
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    if(localStorage){
+    if (localStorage) {
       this.readAccessTokenFromLocalStorageAndFetchUser()
     }
   }
@@ -34,21 +35,21 @@ export class AuthService {
   }
 
   clearAccessTokenFromLocalStorage() {
-    if(localStorage){
+    if (localStorage) {
       localStorage.removeItem('jwt')
       localStorage.removeItem('username')
     }
   }
 
-  putAccessTokenInLocalStorage(username: string, accessToken: JWT){
-    if(localStorage){
+  putAccessTokenInLocalStorage(username: string, accessToken: JWT) {
+    if (localStorage) {
       localStorage.setItem('username', username)
       localStorage.setItem('jwt', accessToken)
     }
   }
 
   fetchUser(username: string) {
-    this.http.get('http://localhost:3000/api/users/' + username)
+    this.http.get(environment.apiUrl + '/users/' + username)
       .toPromise()
       .then(res => {
         this.user.next(res as User)
@@ -56,7 +57,7 @@ export class AuthService {
   }
 
   logIn(creds: Creds) {
-    return this.http.post('http://localhost:3000/api/login', creds)
+    return this.http.post(environment.apiUrl + '/login', creds)
       .toPromise()
       .then(res => {
         const accessToken = res['accessToken']
