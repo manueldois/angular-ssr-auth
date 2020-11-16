@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { User } from 'server/src/interfaces/user.interface';
+import { User } from 'server/src/interfaces';
 
 @Component({
   templateUrl: './home.component.html',

@@ -14,23 +14,23 @@ const app = express_1.default();
 app.use('/static', express_1.default.static(path_1.default.join(__dirname, '../public')));
 app.use(body_parser_1.default.json());
 app.use(cors_1.default());
+// PUBLIC
 app.get('/api/users', (req, res) => {
     res.json(data_1.users);
 });
-app.get('/api/users/:username', parseAccessToken, (req, res) => {
+// PUBLIC
+app.get('/api/users/:username', (req, res) => {
     const queryUsername = req.params['username'];
-    const user = req['user'];
     if (!queryUsername) {
         res.status(400).send('No username in request');
         return;
     }
-    // User is querying himself
-    if (user && user === queryUsername) {
-        res.json(data_1.users.find(u => u.username === user));
-        return;
-    }
     res.json(data_1.users
         .find(u => u.username === queryUsername));
+});
+// REQUIRES LOGIN
+app.get('/api/movies', parseAccessToken, onlyAllowAuthenticatedUsers, (req, res) => {
+    res.json(data_1.movies);
 });
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
@@ -62,6 +62,9 @@ app.post('/api/login', (req, res) => {
 app.listen(3000, () => {
     console.log("Server started in http://localhost:3000/");
 });
+function findUserByUsername(username) {
+    return data_1.users.find(u => u.username === username);
+}
 /**
  * Middleware to grab accessToken jwt from request headers, verify it, and put
  * the username in the request
@@ -79,8 +82,16 @@ function parseAccessToken(req, res, next) {
             next();
             return;
         }
-        req['user'] = decoded.username;
+        req['user'] = findUserByUsername(decoded.username);
         next();
     });
+}
+function onlyAllowAuthenticatedUsers(req, res, next) {
+    if (req['user']) {
+        next();
+    }
+    else {
+        res.sendStatus(401);
+    }
 }
 //# sourceMappingURL=server.js.map

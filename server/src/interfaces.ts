@@ -6,3 +6,8 @@ export interface User {
     movies?: string[],
     profilePicPath?: string
 }
+
+export interface Movie {
+    title: string,
+    likes: number
+}

@@ -3,8 +3,8 @@ import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
 import path from 'path'
 import cors from 'cors'
-import { users } from './data'
-import { User } from './interfaces/user.interface'
+import { movies, users } from './data'
+import { User } from './interfaces'
 
 
 const SERVER_SECRET = '2728iudskjcçapodw72'
@@ -15,27 +15,19 @@ app.use('/static', express.static(path.join(__dirname, '../public')))
 app.use(bodyParser.json())
 app.use(cors())
 
-
+// PUBLIC
 app.get('/api/users', (req, res) => {
     res.json(
         users
     )
 })
 
-app.get('/api/users/:username', parseAccessToken, (req, res) => {
+// PUBLIC
+app.get('/api/users/:username', (req, res) => {
     const queryUsername = req.params['username']
-    const user = (req as any)['user']
 
     if (!queryUsername) {
         res.status(400).send('No username in request')
-        return
-    }
-
-    // User is querying himself
-    if (user && user === queryUsername) {
-        res.json(
-            users.find(u => u.username === user)
-        )
         return
     }
 
@@ -44,6 +36,15 @@ app.get('/api/users/:username', parseAccessToken, (req, res) => {
             .find(u => u.username === queryUsername)
     )
 })
+
+// REQUIRES LOGIN
+app.get('/api/movies', parseAccessToken, onlyAllowAuthenticatedUsers, (req, res) => {
+    res.json(
+        movies
+    )
+})
+
+
 
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body
@@ -89,6 +90,10 @@ app.listen(3000, () => {
 })
 
 
+function findUserByUsername(username: string) {
+    return users.find(u => u.username === username)
+}
+
 /**
  * Middleware to grab accessToken jwt from request headers, verify it, and put
  * the username in the request
@@ -107,7 +112,15 @@ function parseAccessToken(req: Request, res: Response, next: NextFunction) {
             return
         }
 
-        (req as any)['user'] = decoded.username
+        (req as any)['user'] = findUserByUsername(decoded.username)
         next()
     });
+}
+
+function onlyAllowAuthenticatedUsers(req: Request, res: Response, next: NextFunction) {
+    if (req['user']) {
+        next()
+    } else {
+        res.sendStatus(401)
+    }
 }

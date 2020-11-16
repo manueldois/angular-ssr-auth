@@ -4,7 +4,7 @@ import { filter, switchMap } from 'rxjs/operators';
 import { ModalLoginComponent } from 'src/app/modals/login/login.component';
 import { ModalService } from 'src/app/modals/modal.service';
 import { AuthService } from 'src/app/shared/auth.service';
-import { User } from 'src/../server/src/interfaces/user.interface'
+import { User } from 'src/../server/src/interfaces'
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

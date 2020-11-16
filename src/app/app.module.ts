@@ -9,7 +9,7 @@ import { ModalLoginComponent } from './modals/login/login.component';
 import { ModalHostComponent } from './modals/host/host.component';
 import { ModalDirective } from './modals/modal.directive';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MyMoviesComponent } from './pages/my-movies/my-movies.component';
+import { MoviesComponent } from './pages/movies/movies.component';
 import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     ModalLoginComponent,
     ModalHostComponent,
     ModalDirective,
-    MyMoviesComponent,
+    MoviesComponent,
 
   ],
   imports: [

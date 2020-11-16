@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { User } from 'server/src/interfaces/user.interface';
+import { User } from 'server/src/interfaces';
 import { Creds, JWT } from '../interfaces/auth';
 
 @Injectable({
