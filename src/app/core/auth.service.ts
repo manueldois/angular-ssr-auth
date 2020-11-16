@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { User } from 'server/src/interfaces';
 import { Creds, JWT } from '../interfaces/auth';
@@ -12,7 +13,8 @@ export class AuthService {
   accessToken = new BehaviorSubject<JWT>(undefined)
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
     if (localStorage) {
       this.readAccessTokenFromLocalStorageAndFetchUser()
@@ -69,5 +71,7 @@ export class AuthService {
     this.accessToken.next(undefined)
 
     this.clearAccessTokenFromLocalStorage()
+
+    this.router.navigate(['/home'])
   }
 }

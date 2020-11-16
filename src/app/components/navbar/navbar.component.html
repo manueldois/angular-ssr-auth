@@ -1,7 +1,7 @@
 <nav>
     <div class="left">
         <a routerLink="/home" routerLinkActive="active">Home</a>
-        <a routerLink="/movies" routerLinkActive="active">Movies</a>
+        <a *ngIf="username" routerLink="/movies" routerLinkActive="active">Movies</a>
     </div>
     <div class="right">
         <button *ngIf="!username" (click)="logIn()">Log in</button>
