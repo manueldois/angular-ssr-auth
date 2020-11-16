@@ -14,32 +14,34 @@ export class AuthService {
   constructor(
     private http: HttpClient
   ) {
-    if(localStorage){
+    if (localStorage) {
       this.readAccessTokenFromLocalStorageAndFetchUser()
     }
 
     // this.logIn({ username: 'Ana', password: 'ana123' })
   }
 
-  readAccessTokenFromLocalStorageAndFetchUser(){
+  readAccessTokenFromLocalStorageAndFetchUser() {
     const accessToken = localStorage.getItem('jwt')
     const username = localStorage.getItem('username')
 
-    if(accessToken && username){
-      this.accessToken.next(accessToken) 
-
-      // Query the API for the full user
-      this.http.get('http://localhost:3000/api/users/'+username)
-        .toPromise()
-        .then(res => {
-          this.user.next(res as User)
-        })
+    if (accessToken && username) {
+      this.accessToken.next(accessToken)
+      this.fetchUser(username)
     }
   }
 
-  clearAccessTokenFromLocalStorage(){
+  clearAccessTokenFromLocalStorage() {
     localStorage.removeItem('jwt')
     localStorage.removeItem('username')
+  }
+
+  fetchUser(username: string) {
+    this.http.get('http://localhost:3000/api/users/' + username)
+      .toPromise()
+      .then(res => {
+        this.user.next(res as User)
+      })
   }
 
   logIn(creds: Creds) {
@@ -55,7 +57,7 @@ export class AuthService {
         this.accessToken.next(accessToken)
 
         // Save accessToken to localStorage if present
-        if(localStorage){
+        if (localStorage) {
           localStorage.setItem('username', creds.username)
           localStorage.setItem('jwt', accessToken)
         }
