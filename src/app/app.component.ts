@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalService } from './modals/modal.service';
-import { AuthService } from './shared/auth.service';
+import { AuthService } from './core/auth.service';
 
 @Component({
   selector: 'app-root',

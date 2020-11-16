@@ -1,10 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { filter, switchMap } from 'rxjs/operators';
 import { ModalLoginComponent } from 'src/app/modals/login/login.component';
 import { ModalService } from 'src/app/modals/modal.service';
-import { AuthService } from 'src/app/shared/auth.service';
-import { User } from 'src/../server/src/interfaces'
+import { AuthService } from 'src/app/core/auth.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

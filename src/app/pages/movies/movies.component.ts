@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Movie } from 'server/src/interfaces';
-import { AuthService } from 'src/app/shared/auth.service';
+import { AuthService } from 'src/app/core/auth.service';
 
 @Component({
   templateUrl: './movies.component.html',

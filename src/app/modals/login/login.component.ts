@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from 'src/app/shared/auth.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { AuthService } from 'src/app/core/auth.service';
 
 @Component({
   selector: 'app-modal-login',
