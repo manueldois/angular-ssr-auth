@@ -20,7 +20,7 @@ import { parseAccessToken, onlyAllowAuthenticatedUsers } from './middleware';
 export function app(): express.Express {
   const app = express();
   const distFolder = join(process.cwd(), 'dist/angular-ssr-auth/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index.html';
 
   // Set localStorage to undefined
   global['localStorage'] = undefined
@@ -106,7 +106,12 @@ export function app(): express.Express {
 
   // All regular routes use the Universal engine
   app.get('*', (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+    const useSSR = false
+    if (useSSR) {
+      res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+    } else {
+      res.sendFile(join(distFolder, indexHtml))
+    }
   });
 
   return app;
