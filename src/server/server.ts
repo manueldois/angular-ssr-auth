@@ -106,7 +106,7 @@ export function app(): express.Express {
 
   // All regular routes use the Universal engine
   app.get('*', (req, res) => {
-    const useSSR = false
+    const useSSR = true
     if (useSSR) {
       res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
     } else {
