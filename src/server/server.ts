@@ -6,6 +6,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import * as jwt from 'jsonwebtoken'
+import * as cookieParser from 'cookie-parser'
 
 import { AppServerModule } from '../main.server';
 import { APP_BASE_HREF } from '@angular/common';
@@ -14,6 +15,7 @@ import { existsSync } from 'fs';
 import { movies, users } from './data';
 import { environment } from '../environments/environment'
 import { parseAccessToken, onlyAllowAuthenticatedUsers } from './middleware';
+import { INIT_AUTH } from 'src/init-auth.injection-token';
 
 
 
@@ -31,6 +33,7 @@ export function app(): express.Express {
   }));
   app.use(bodyParser.json())
   app.use(cors())
+  app.use(cookieParser())
   app.engine('html', ngExpressEngine({
     bootstrap: AppServerModule,
   }));
@@ -98,17 +101,45 @@ export function app(): express.Express {
       environment.serverSecret
     )
 
-    // Send the token as json
+    // Put the accessToken as an httpOnly cookie
+    res.cookie('jwt', accessToken, { httpOnly: true })
+    // Also send the token and user as json
     res.json({ user, accessToken })
   })
 
+  app.post('/api/logout', (req, res) => {
+    res.clearCookie('jwt', { httpOnly: true })
+    res.send({})
+  })
 
 
   // All regular routes use the Universal engine
-  app.get('*', (req, res) => {
+  app.get('*', parseAccessToken, (req, res) => {
     const useSSR = true
     if (useSSR) {
-      res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+      res.render(indexHtml, {
+        req,
+        providers: buildAppProviders()
+      });
+
+      function buildAppProviders() {
+        let providers = []
+
+        providers.push({ provide: APP_BASE_HREF, useValue: req.baseUrl })
+
+        // If the GET request comes with a jwt cookie,
+        // There is a user logged in
+        // Pass that jwt and username to the app via it's providers
+        const { jwt, user } = (req as any);
+        if (jwt && user) {
+          providers.push(
+            { provide: INIT_AUTH, useValue: { username: user.username, accessToken: jwt } }
+          )
+        }
+
+        return providers
+      }
+
     } else {
       res.sendFile(join(distFolder, indexHtml))
     }

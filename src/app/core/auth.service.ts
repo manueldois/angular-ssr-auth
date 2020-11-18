@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { User } from 'src/server/interfaces';
 import { Creds, JWT } from '../interfaces/auth';
 import { environment } from 'src/environments/environment'
+import { InitAuth, INIT_AUTH } from 'src/init-auth.injection-token';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +16,18 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    @Optional() @Inject(INIT_AUTH) initAuth: InitAuth
   ) {
-    if (localStorage) {
+    if (initAuth) {
+      console.log("Got initial authorization data: ", initAuth)
+      this.accessToken.next(initAuth.accessToken)
+      this.fetchUser(initAuth.username)
+
+    } else if (localStorage) {
       this.readAccessTokenFromLocalStorageAndFetchUser()
     }
+
   }
 
   readAccessTokenFromLocalStorageAndFetchUser() {
@@ -75,12 +83,21 @@ export class AuthService {
       })
   }
 
-  logOut() {
+  async logOut() {
     this.user.next(undefined)
     this.accessToken.next(undefined)
 
     this.clearAccessTokenFromLocalStorage()
 
+    await this.askServerToClearJWTCookie()
+    
     this.router.navigate(['/home'])
+  }
+
+  askServerToClearJWTCookie(){
+    // Since the jwt cookie is httpOnly,
+    // Only the server can remove it
+    return this.http.post(environment.apiUrl + '/logout', {})
+      .toPromise()
   }
 }

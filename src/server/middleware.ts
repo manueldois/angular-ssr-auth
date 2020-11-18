@@ -4,11 +4,14 @@ import { users } from './data';
 import { environment } from '../environments/environment'
 
 /**
- * Middleware to grab accessToken jwt from request headers, verify it, and put
- * the username in the request
+ * Middleware to grab accessToken jwt from request headers or cookie, verify it, and put
+ * the user and accessToken in the request under req.user and req.jwt
  */
 export function parseAccessToken(req: Request, res: Response, next: NextFunction) {
-    const accessToken = req.headers.authorization?.split(' ')[1];
+    // Now the accessToken can come from both the authorization header or the 'jwt' cookie
+    const accessToken =
+        req.headers.authorization?.split(' ')[1]
+        || req.cookies?.['jwt']
 
     if (!accessToken) {
         next()
@@ -21,7 +24,9 @@ export function parseAccessToken(req: Request, res: Response, next: NextFunction
             return
         }
 
-        (req as any)['user'] = users.find(u => u.username === decoded.username)
+        (req as any)['user'] = users.find(u => u.username === decoded.username);
+        (req as any)['jwt'] = accessToken
+
         next()
     });
 }
