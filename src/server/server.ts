@@ -4,7 +4,6 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 import { join } from 'path';
 import * as express from 'express';
 import * as bodyParser from 'body-parser'
-import * as cors from 'cors'
 import * as jwt from 'jsonwebtoken'
 import * as cookieParser from 'cookie-parser'
 
@@ -17,14 +16,14 @@ import { environment } from '../environments/environment'
 import { parseAccessToken, onlyAllowAuthenticatedUsers } from './middleware';
 import { INIT_AUTH } from 'src/init-auth.injection-token';
 
-
+const USE_SSR = true
 
 export function app(): express.Express {
   const app = express();
   const distFolder = join(process.cwd(), 'dist/angular-ssr-auth/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index.html';
 
-  // Set localStorage to undefined
+  // Set localStorage to undefined, so when doing SSR of the app the code can skip it
   global['localStorage'] = undefined
 
   app.use('/static', express.static(join(process.cwd(), 'public')))
@@ -32,7 +31,6 @@ export function app(): express.Express {
     maxAge: '1y'
   }));
   app.use(bodyParser.json())
-  app.use(cors())
   app.use(cookieParser())
   app.engine('html', ngExpressEngine({
     bootstrap: AppServerModule,
@@ -115,8 +113,7 @@ export function app(): express.Express {
 
   // All regular routes use the Universal engine
   app.get('*', parseAccessToken, (req, res) => {
-    const useSSR = true
-    if (useSSR) {
+    if (USE_SSR) {
       res.render(indexHtml, {
         req,
         providers: buildAppProviders()
