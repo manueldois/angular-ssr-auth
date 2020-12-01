@@ -3,14 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build:ssr && npm run serve:ssr",
+    "start": "npm run serve:ssr",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "dev:ssr": "ng run angular-ssr-auth:serve-ssr",
     "serve:ssr": "node dist/angular-ssr-auth/server/main.js",
     "build:ssr": "ng build --prod && ng run angular-ssr-auth:server:production",
-    "prerender": "ng run angular-ssr-auth:prerender"
+    "prerender": "ng run angular-ssr-auth:prerender",
+    "heroku-postbuild": "npm run build:ssr"
   },
   "private": true,
   "dependencies": {
@@ -33,9 +34,9 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
+    "@angular/cli": "^11.0.2",
     "@angular-devkit/build-angular": "~0.1100.1",
-    "@angular/cli": "~11.0.1",
-    "@angular/compiler-cli": "~11.0.0",
+    "@angular/compiler-cli": "^11.0.2",
     "@nguniversal/builders": "^11.0.0",
     "@types/body-parser": "^1.19.0",
     "@types/cookie-parser": "^1.4.2",
